@@ -1,0 +1,22 @@
+# created by virtualenv automatically
+.venv/bin
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual environments
+venv/
+.venv
+.env/
+
+# IDE settings
+.idea/
+.vscode/
+
+# PyInstaller
+*.spec
+
+# Installer logs
+pip-log.txt
+pip-delete-this-directory.txt
