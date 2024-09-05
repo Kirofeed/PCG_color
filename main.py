@@ -43,18 +43,27 @@ root.minsize(500, 500)
 root.maxsize(1000, 600)
 root.title("Color Converter")
 
+# Настройка сетки для центрирования
+root.grid_columnconfigure(0, weight=1)
+root.grid_columnconfigure(1, weight=1)
+root.grid_rowconfigure(0, weight=1)
+root.grid_rowconfigure(1, weight=1)
+root.grid_rowconfigure(2, weight=1)
+
 # Кнопка для выбора цвета
 color_button = tk.Button(root, text="Choose Color", command=choose_color)
-color_button.columnconfigure(0, weight=1)
-color_button.rowconfigure(0, weight=1)
-color_button.grid(column=0, row=0)
+color_button.grid(row=0, column=0, columnspan=2, padx=5, pady=5)
 
 # Метки для отображения результатов
 rgb_label = tk.Label(root, text="RGB:")
-rgb_label.grid(row=1, column=0, pady=5)
+rgb_label.grid(row=1, column=0, pady=5, sticky='e')
+
+# Ползунок для RGB
 scale_button = ttk.Scale(root)
-scale_button.grid(row=1, column=1, padx=50, pady=5)
+scale_button.grid(row=1, column=1, padx=50, pady=5, sticky='w')
+
+# Метка для HSL
 hsl_label = tk.Label(root, text="HSL:")
-hsl_label.grid(row=2, column=0, pady=5)
+hsl_label.grid(row=2, column=0, pady=5, sticky='e')
 
 root.mainloop()
