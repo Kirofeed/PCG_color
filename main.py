@@ -46,28 +46,53 @@ root.title("Color Converter")
 # Настройка сетки для центрирования
 root.grid_columnconfigure(0, weight=1)
 root.grid_columnconfigure(1, weight=1)
-root.grid_rowconfigure(0, weight=1)
-root.grid_rowconfigure(1, weight=1)
-root.grid_rowconfigure(2, weight=1)
+root.grid_columnconfigure(2, weight=1)
+root.grid_rowconfigure(0, weight=0)
+root.grid_rowconfigure(1, weight=0)
+root.grid_rowconfigure(2, weight=0)
+root.grid_rowconfigure(3, weight=0)
 
 # Кнопка для выбора цвета
 color_button = tk.Button(root, text="Choose Color", command=choose_color)
-color_button.grid(row=0, column=0, columnspan=2, padx=5, pady=5)
+color_button.grid(row=0, column=0, columnspan=3, padx=5, pady=100)
 
 # Метка для CMYK
 CMYK_label = tk.Label(root, text="CMYK:")
 CMYK_label.grid(row=1, column=0, pady=5, sticky='e')
 
+# Ввод текста для CMYK
+CMYK_entry = tk.Entry(root)
+CMYK_entry.insert(0, "0, 0, 0")
+CMYK_entry.grid(row=1, column=1, pady=5, padx=(0, 5), sticky='w')
+
 # Ползунок для CMYK
 scale_button_CMYK = ttk.Scale(root)
-scale_button_CMYK.grid(row=1, column=1, padx=50, pady=5, sticky='w')
+scale_button_CMYK.grid(row=1, column=2, padx=50, pady=5, sticky='w')
 
 # Метка для LAB
 LAB_label = tk.Label(root, text="LAB:")
 LAB_label.grid(row=2, column=0, pady=5, sticky='e')
 
+# Ввод текста для LAB
+LAB_entry = tk.Entry(root)
+LAB_entry.insert(0, "0, 0, 0")
+LAB_entry.grid(row=2, column=1, pady=5, padx=(0, 5), sticky='w')
+
 # Ползунок для LAB
 scale_button_LAB = ttk.Scale(root)
-scale_button_LAB.grid(row=2, column=1, padx=50, pady=5, sticky='w')
+scale_button_LAB.grid(row=2, column=2, padx=50, pady=5, sticky='w')
+
+# Метка для HSV
+HSV_label = tk.Label(root, text="HSV:")
+HSV_label.grid(row=3, column=0, pady=5, sticky='e')
+
+# Ввод текста для HSV
+HSV_entry = tk.Entry(root)
+HSV_entry.insert(0, "0, 0, 0")
+HSV_entry.grid(row=3, column=1, pady=5, padx=(0, 5), sticky='w')
+
+# Ползунок для HSV
+scale_button_HSV = ttk.Scale(root)
+scale_button_HSV.grid(row=3, column=2, padx=50, pady=5, sticky='w')
 
 root.mainloop()
