@@ -37,11 +37,38 @@ def choose_color():
         CMYK_label.config(text=f"RGB: {cmyk_value}")
         # LAB_label.config(text=f"HSL: {LAB_value}")
 
+# Создание функции реагирования
+def process_colors(n):
+    for ind in range(4):
+        CMYK_values[ind] = (cmyk_scales[ind].get())
+        print(CMYK_values[ind], end=' ')
+    print()
+    for ind in range(3):
+        LAB_values[ind] = lab_scales[ind].get()
+        print(LAB_values[ind], end=' ')
+    print()
+    for ind in range(3):
+        HSV_values[ind] = hsv_scales[ind].get()
+        print(HSV_values[ind], end=' ')
+    CMYK_entry.delete(0, tk.END)
+    CMYK_entry.insert(0, f'{round(CMYK_values[0], 2)}, ' + f'{round(CMYK_values[1], 2)}, ' +
+                      f'{round(CMYK_values[2], 2)}, ' + f'{round(CMYK_values[3], 2)}')
+    LAB_entry.delete(0, tk.END)
+    LAB_entry.insert(0, f'{round(LAB_values[0], 2)}, ' + f'{round(LAB_values[1], 2)}, ' + f'{round(LAB_values[2], 2)}')
+    HSV_entry.delete(0, tk.END)
+    HSV_entry.insert(0, f'{round(HSV_values[0], 2)}, ' + f'{round(HSV_values[1], 2)}, ' + f'{round(HSV_values[2], 2)}')
+
+
+
 # Создание окна
 root = tk.Tk()
 # root.minsize(500, 500)
 # root.maxsize(1000, 600)
 root.title("Color Converter")
+
+CMYK_values = [0.0, 0.0, 0.0, 0.0]
+LAB_values = [0.0, 0.0, 0.0]
+HSV_values = [0.0, 0.0, 0.0]
 
 # Создание фреймов
 CMYK_frame = tk.Frame(root, bd=5, relief="solid", highlightbackground="red", highlightthickness=2)
@@ -87,13 +114,14 @@ CMYK_label.grid(row=0, column=0, rowspan=3, pady=5)
 
 # Ввод текста для CMYKf
 CMYK_entry = tk.Entry(CMYK_frame)
-CMYK_entry.insert(0, "0, 0, 0")
+CMYK_entry.insert(0, f'{CMYK_values[0]}, ' + f'{CMYK_values[1]}, ' +
+                  f'{CMYK_values[2]}' + f'{CMYK_values[3]}')
 CMYK_entry.grid(row=1, column=0, rowspan=3, pady=5, padx=(3, 5))
 
 # Ползунки для CMYK
 cmyk_scales = []
 for i in range(4):
-    scale_button = ttk.Scale(CMYK_frame, from_=0, to=100)#, command = process_colors
+    scale_button = ttk.Scale(CMYK_frame, from_=0, to=100, command=process_colors)
     scale_button.grid(row=i, column=1, padx=30, pady=5, sticky='w')
     cmyk_scales.append(scale_button)
 
@@ -104,16 +132,16 @@ LAB_label.grid(row=0, column=0, rowspan=3, pady=5)
 
 # Ввод текста для LAB
 LAB_entry = tk.Entry(LAB_frame)
-LAB_entry.insert(0, "0, 0, 0")
+LAB_entry.insert(0, f'{LAB_values[0]}, ' + f'{LAB_values[1]}, ' + f'{LAB_values[2]}')
 LAB_entry.grid(row=1, column=0, rowspan=3, pady=5, padx=(3, 5))
 
 # Ползунки для LAB
 lab_scales = []
 for i in range(3):
     if i == 0:
-        scale_button = ttk.Scale(LAB_frame, from_=0, to=100)#, command = process_colors
+        scale_button = ttk.Scale(LAB_frame, from_=0, to=100, command=process_colors)
     else:
-        scale_button = ttk.Scale(LAB_frame, from_=-128, to=127)#, command = process_colors
+        scale_button = ttk.Scale(LAB_frame, from_=-128, to=127, command=process_colors)
     scale_button.grid(row=i, column=1, padx=30, pady=5, sticky='w')
     lab_scales.append(scale_button)
 
@@ -123,16 +151,17 @@ HSV_label.grid(row=0, column=0, rowspan=3, pady=5)
 
 # Ввод текста для LAB
 HSV_entry = tk.Entry(HSV_frame)
-HSV_entry.insert(0, "0, 0, 0")
+HSV_entry.insert(0, f'{HSV_values[0]}, ' + f'{HSV_values[1]}, ' + f'{HSV_values[2]}')
+
 HSV_entry.grid(row=1, column=0, rowspan=3, pady=5, padx=(3, 5))
 
 # Ползунки для HSV
 hsv_scales = []
 for i in range(3):
     if i == 0:
-        scale_button = ttk.Scale(HSV_frame, from_=0, to=359)#, command = process_colors
+        scale_button = ttk.Scale(HSV_frame, from_=0, to=359, command=process_colors)
     else:
-        scale_button = ttk.Scale(HSV_frame, from_=0, to=100)#, command = process_colors
+        scale_button = ttk.Scale(HSV_frame, from_=0, to=100, command=process_colors)
     scale_button.grid(row=i, column=1, padx=30, pady=5, sticky='w')
     hsv_scales.append(scale_button)
 
