@@ -59,7 +59,6 @@ def process_colors(n):
     HSV_entry.insert(0, f'{round(HSV_values[0], 2)}, ' + f'{round(HSV_values[1], 2)}, ' + f'{round(HSV_values[2], 2)}')
 
 
-
 # Создание окна
 root = tk.Tk()
 # root.minsize(500, 500)
@@ -107,16 +106,15 @@ root.grid_rowconfigure(3, weight=0)
 # Кнопка для выбора цвета
 color_button = tk.Button(root, text="Choose Color", command=choose_color)
 color_button.grid(row=0, column=0, columnspan=1, padx=5, pady=100)
-
 # Метка для CMYK
 CMYK_label = tk.Label(CMYK_frame, text="CMYK:")
-CMYK_label.grid(row=0, column=0, rowspan=3, pady=5)
+CMYK_label.grid(row=0, column=0, pady=(10, 5))
 
 # Ввод текста для CMYKf
 CMYK_entry = tk.Entry(CMYK_frame)
 CMYK_entry.insert(0, f'{CMYK_values[0]}, ' + f'{CMYK_values[1]}, ' +
                   f'{CMYK_values[2]}' + f'{CMYK_values[3]}')
-CMYK_entry.grid(row=1, column=0, rowspan=3, pady=5, padx=(3, 5))
+CMYK_entry.grid(row=1, column=0, pady=5, padx=(3, 5))
 
 # Ползунки для CMYK
 cmyk_scales = []
@@ -128,12 +126,12 @@ for i in range(4):
 
 # Метка для LAB
 LAB_label = tk.Label(LAB_frame, text="LAB:")
-LAB_label.grid(row=0, column=0, rowspan=3, pady=5)
+LAB_label.grid(row=0, column=0, pady=(10, 5))
 
 # Ввод текста для LAB
 LAB_entry = tk.Entry(LAB_frame)
 LAB_entry.insert(0, f'{LAB_values[0]}, ' + f'{LAB_values[1]}, ' + f'{LAB_values[2]}')
-LAB_entry.grid(row=1, column=0, rowspan=3, pady=5, padx=(3, 5))
+LAB_entry.grid(row=1, column=0, pady=5, padx=(3, 5))
 
 # Ползунки для LAB
 lab_scales = []
@@ -141,19 +139,19 @@ for i in range(3):
     if i == 0:
         scale_button = ttk.Scale(LAB_frame, from_=0, to=100, command=process_colors)
     else:
-        scale_button = ttk.Scale(LAB_frame, from_=-128, to=127, command=process_colors)
+        scale_button = ttk.Scale(LAB_frame, from_=-0, to=127, command=process_colors)
     scale_button.grid(row=i, column=1, padx=30, pady=5, sticky='w')
     lab_scales.append(scale_button)
 
 # Метка для HSV
 HSV_label = tk.Label(HSV_frame, text="HSV:")
-HSV_label.grid(row=0, column=0, rowspan=3, pady=5)
+HSV_label.grid(row=0, column=0, pady=(10, 5))
 
 # Ввод текста для LAB
 HSV_entry = tk.Entry(HSV_frame)
 HSV_entry.insert(0, f'{HSV_values[0]}, ' + f'{HSV_values[1]}, ' + f'{HSV_values[2]}')
 
-HSV_entry.grid(row=1, column=0, rowspan=3, pady=5, padx=(3, 5))
+HSV_entry.grid(row=1, column=0, pady=5, padx=(3, 5))
 
 # Ползунки для HSV
 hsv_scales = []
