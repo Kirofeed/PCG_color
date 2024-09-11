@@ -186,8 +186,8 @@ def choose_color():
         CMYK_values[2].set(cmyk[2])
         CMYK_values[3].set(cmyk[3])
         LAB_values[0].set(lab[0])
-        LAB_values[1].set(lab[1])
-        LAB_values[2].set(lab[2])
+        LAB_values[1].set(lab[1] + 128)
+        LAB_values[2].set(lab[2] + 128)
         HSV_values[0].set(hsv[0])
         HSV_values[1].set(hsv[1])
         HSV_values[2].set(hsv[2])
@@ -199,7 +199,7 @@ def choose_color():
 def update_color_rectangles():
     # Обновляем цвета квадратов для CMYK, LAB, HSV
     cmyk_color = cmyk_to_rgb(CMYK_values[0].get(), CMYK_values[1].get(), CMYK_values[2].get(), CMYK_values[3].get())
-    lab_color = lab_to_rgb(LAB_values[0].get(), LAB_values[1].get(), LAB_values[2].get())
+    lab_color = lab_to_rgb(LAB_values[0].get(), LAB_values[1].get() - 128, LAB_values[2].get() - 128)
     hsv_color = hsv_to_rgb(HSV_values[0].get(), HSV_values[1].get(), HSV_values[2].get())
 
     # Обновляем цвета квадратов в формате RGB
@@ -215,7 +215,7 @@ def update_colors():
     CMYK_entry.insert(0, f'{round(CMYK_values[0].get(), 1)}, {round(CMYK_values[1].get(), 1)}, {round(CMYK_values[2].get(), 1)}, {round(CMYK_values[3].get(), 1)}')
 
     LAB_entry.delete(0, tk.END)
-    LAB_entry.insert(0, f'{round(LAB_values[0].get(), 1)}, {round(LAB_values[1].get(), 1)}, {round(LAB_values[2].get(), 1)}')
+    LAB_entry.insert(0, f'{round(LAB_values[0].get(), 1)}, {round(LAB_values[1].get() - 128, 1)}, {round(LAB_values[2].get() - 128, 1)}')
 
     HSV_entry.delete(0, tk.END)
     HSV_entry.insert(0, f'{round(HSV_values[0].get(), 1)}, {round(HSV_values[1].get(), 1)}, {round(HSV_values[2].get(), 1)}')
@@ -235,8 +235,8 @@ def update_from_hsv(*args):
     CMYK_values[2].set(cmyk[2])
     CMYK_values[3].set(cmyk[3])
     LAB_values[0].set(lab[0])
-    LAB_values[1].set(lab[1])
-    LAB_values[2].set(lab[2])
+    LAB_values[1].set(lab[1] + 128)
+    LAB_values[2].set(lab[2] + 128)
 
     update_colors()
     update_color_rectangles()
@@ -252,8 +252,8 @@ def update_from_cmyk(*args):
     lab = rgb_to_lab(r, g, b)
 
     LAB_values[0].set(lab[0])
-    LAB_values[1].set(lab[1])
-    LAB_values[2].set(lab[2])
+    LAB_values[1].set(lab[1] + 128)
+    LAB_values[2].set(lab[2] + 128)
     HSV_values[0].set(hsv[0])
     HSV_values[1].set(hsv[1])
     HSV_values[2].set(hsv[2])
@@ -263,8 +263,8 @@ def update_from_cmyk(*args):
 
 def update_from_lab(*args):
     l = LAB_values[0].get()
-    a = LAB_values[1].get()
-    b = LAB_values[2].get()
+    a = LAB_values[1].get() - 128
+    b = LAB_values[2].get() - 128
 
     r, g, b = lab_to_rgb(l, a, b)
     cmyk = rgb_to_cmyk(r, g, b)
@@ -280,6 +280,59 @@ def update_from_lab(*args):
 
     update_colors()
     update_color_rectangles()
+
+
+def clamp(value, min_value, max_value):
+    """Ограничение значения в пределах диапазона."""
+    return max(min_value, min(value, max_value))
+
+
+def update_cmyk_from_entry(event):
+    try:
+        # Удаляем лишние пробелы и разбиваем строку по запятым
+        c, m, y, k = map(float, CMYK_entry.get().replace(' ', '').split(','))
+        # Округляем значения до ближайших в пределах от 0 до 100
+        c, m, y, k = clamp(c, 0, 100), clamp(m, 0, 100), clamp(y, 0, 100), clamp(k, 0, 100)
+
+        CMYK_values[0].set(c)
+        CMYK_values[1].set(m)
+        CMYK_values[2].set(y)
+        CMYK_values[3].set(k)
+
+        update_from_cmyk()
+    except ValueError:
+        print("Неправильный формат ввода для CMYK")
+
+
+def update_lab_from_entry(event):
+    try:
+        l, a, b = map(float, LAB_entry.get().replace(' ', '').split(','))
+        # Округляем значения LAB: L от 0 до 100, A и B от -128 до 127
+        l, a, b = clamp(l, 0, 100), clamp(a, -128, 127), clamp(b, -128, 127)
+
+        LAB_values[0].set(l)
+        LAB_values[1].set(a + 128)  # для корректной работы с ползунком
+        LAB_values[2].set(b + 128)
+
+        update_from_lab()
+    except ValueError:
+        print("Неправильный формат ввода для LAB")
+
+
+def update_hsv_from_entry(event):
+    try:
+        h, s, v = map(float, HSV_entry.get().replace(' ', '').split(','))
+        # Округляем значения HSV: H от 0 до 359, S и V от 0 до 100
+        h, s, v = clamp(h, 0, 359), clamp(s, 0, 100), clamp(v, 0, 100)
+
+        HSV_values[0].set(h)
+        HSV_values[1].set(s)
+        HSV_values[2].set(v)
+
+        update_from_hsv()
+    except ValueError:
+        print("Неправильный формат ввода для HSV")
+
 
 # Создание окна
 root = tk.Tk()
@@ -351,6 +404,9 @@ CMYK_entry.insert(0, f'{CMYK_values[0].get()}, ' + f'{CMYK_values[1].get()}, ' +
                   f'{CMYK_values[2].get()}' + f'{CMYK_values[3].get()}')
 CMYK_entry.grid(row=1, column=0, pady=5, padx=(3, 5))
 
+# Привязка события Enter для обновления значений через Entry
+CMYK_entry.bind("<Return>", update_cmyk_from_entry)
+
 # Ползунки для CMYK
 cmyk_scales = []
 for i in range(4):
@@ -365,8 +421,11 @@ LAB_label.grid(row=0, column=0, pady=(10, 5))
 
 # Ввод текста для LAB
 LAB_entry = tk.Entry(LAB_frame)
-LAB_entry.insert(0, f'{LAB_values[0].get()}, ' + f'{LAB_values[1].get()}, ' + f'{LAB_values[2].get()}')
+LAB_entry.insert(0, f'{LAB_values[0].get()}, ' + f'{LAB_values[1].get() - 128}, ' + f'{LAB_values[2].get() - 128}')
 LAB_entry.grid(row=1, column=0, pady=5, padx=(3, 5))
+
+# Привязка события Enter для обновления значений через Entry
+LAB_entry.bind("<Return>", update_lab_from_entry)
 
 # Ползунки для LAB
 lab_scales = []
@@ -374,7 +433,7 @@ for i in range(3):
     if i == 0:
         scale_button = ttk.Scale(LAB_frame, from_=0, to=100, variable=LAB_values[i], command=update_from_lab)
     else:
-        scale_button = ttk.Scale(LAB_frame, from_=-0, to=127, variable=LAB_values[i], command=update_from_lab)
+        scale_button = ttk.Scale(LAB_frame, from_=0, to=265, variable=LAB_values[i], command=update_from_lab,)
     scale_button.grid(row=i, column=1, padx=30, pady=5, sticky='w')
     lab_scales.append(scale_button)
 
@@ -385,6 +444,9 @@ HSV_label.grid(row=0, column=0, pady=(10, 5))
 # Ввод текста для HSV
 HSV_entry = tk.Entry(HSV_frame)
 HSV_entry.insert(0, f'{HSV_values[0].get()}, ' + f'{HSV_values[1].get()}, ' + f'{HSV_values[2].get()}')
+
+# Привязка события Enter для обновления значений через Entry
+HSV_entry.bind("<Return>", update_hsv_from_entry)
 
 HSV_entry.grid(row=1, column=0, pady=5, padx=(3, 5))
 
